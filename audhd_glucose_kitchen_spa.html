@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PikyEatr | Comida Crunch, Dopamina & Glucosa Estable</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            // Paleta Verde Natural / Bosque / Salvia
+            forest: {
+              50: '#F2F7F2',
+              100: '#E2EDE1',
+              200: '#C5DCC3',
+              300: '#9EBF9A',
+              400: '#6E9C68',
+              500: '#4D7D47',
+              600: '#3A6335',
+              700: '#2F502B',
+              800: '#274124',
+              900: '#1F341D',
+            },
+            // Paleta Beige Cálido / Crema / Arena
+            cream: {
+              50: '#FDFCFA',
+              100: '#FBF8F1',
+              200: '#F4EFE3',
+              300: '#EAE1CE',
+              400: '#DCschool',
+              500: '#D5C7B0',
+              600: '#BCA88C',
+              700: '#9E886B',
+              800: '#75634D',
+              900: '#4A3E31',
+            },
+            crunch: {
+              warm: '#C97A3E',
+              amber: '#D9822B',
+            },
+            surface: {
+              light: '#FAF7F0',
+              card: '#FFFFFF',
+              border: '#E8E1D3',
+              dark: '#1C221B',
+              darkCard: '#252D24',
+              darkBorder: '#364235'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Estética acogedora beige y verde, suave para la vista */
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F4EFE3;
+    }
+    .dark ::-webkit-scrollbar-track {
+      background: #1C221B;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #BCA88C;
+      border-radius: 9999px;
+    }
+    .badge-crunch {
+      background: linear-gradient(135deg, #D9822B, #B8621B);
+    }
+    .badge-forest {
+      background: linear-gradient(135deg, #3A6335, #274124);
+    }
+  </style>
+</head>
+<body class="bg-[#FAF7F0] text-[#2C2825] dark:bg-[#161B15] dark:text-[#E8EDE6] min-h-screen flex flex-col font-sans transition-colors duration-200">
+
+  <!-- Header / Navigation -->
+  <header class="sticky top-0 z-40 bg-[#FAF7F0]/90 dark:bg-[#161B15]/90 backdrop-blur-md border-b border-[#E8E1D3] dark:border-[#2D382C] shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-forest-500 to-forest-700 flex items-center justify-center text-[#FBF8F1] shadow-sm">
+          <i data-lucide="sparkles" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <h1 class="text-xl font-extrabold tracking-tight text-forest-800 dark:text-forest-200">
+              Piky<span class="text-crunch-warm">Eatr</span>
+            </h1>
+            <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-forest-100 text-forest-800 dark:bg-forest-900/60 dark:text-forest-300">
+              AuDHD & Glucose
+            </span>
+          </div>
+          <p class="text-xs text-cream-800/80 dark:text-cream-300/70 font-medium hidden sm:block">
+            Texturas crocantes, dopamina al momento y picos de glucosa domados
+          </p>
+        </div>
+      </div>
+
+      <!-- Desktop Nav Bar -->
+      <nav class="hidden md:flex items-center gap-1.5 text-sm font-semibold">
+        <button onclick="switchTab('recetas')" id="nav-recetas" class="px-3.5 py-2 rounded-xl transition-all text-forest-800 dark:text-forest-200 bg-forest-100/90 dark:bg-forest-900/40">
+          <i data-lucide="utensils" class="w-4 h-4 inline mr-1.5"></i> Recetario
+        </button>
+        <button onclick="switchTab('estrategia')" id="nav-estrategia" class="px-3.5 py-2 rounded-xl transition-all text-cream-800 dark:text-cream-200 hover:bg-cream-200/60 dark:hover:bg-forest-900/30">
+          <i data-lucide="brain" class="w-4 h-4 inline mr-1.5"></i> Estrategia AuDHD
+        </button>
+        <button onclick="switchTab('manual')" id="nav-manual" class="px-3.5 py-2 rounded-xl transition-all text-cream-800 dark:text-cream-200 hover:bg-cream-200/60 dark:hover:bg-forest-900/30">
+          <i data-lucide="plus-circle" class="w-4 h-4 inline mr-1.5"></i> Crear Receta
+        </button>
+        <button onclick="switchTab('importar')" id="nav-importar" class="px-3.5 py-2 rounded-xl transition-all text-cream-800 dark:text-cream-200 hover:bg-cream-200/60 dark:hover:bg-forest-900/30">
+          <i data-lucide="link" class="w-4 h-4 inline mr-1.5"></i> Extraer por Link
+        </button>
+      </nav>
+
+      <!-- Right tools (Dark mode + backup) -->
+      <div class="flex items-center gap-2">
+        <button onclick="exportData()" class="p-2 rounded-xl text-cream-800 hover:bg-cream-200 dark:text-cream-300 dark:hover:bg-forest-900/40 transition" title="Respaldar recetas en archivo JSON">
+          <i data-lucide="download-cloud" class="w-5 h-5"></i>
+        </button>
+        <button onclick="toggleDarkMode()" class="p-2 rounded-xl text-cream-800 hover:bg-cream-200 dark:text-cream-300 dark:hover:bg-forest-900/40 transition" title="Modo Oscuro / Claro">
+          <i data-lucide="sun-moon" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Nav Bar -->
+    <div class="flex md:hidden border-t border-[#E8E1D3] dark:border-[#2D382C] px-3 py-2 text-xs font-semibold gap-1 justify-around bg-[#FAF7F0] dark:bg-[#161B15]">
+      <button onclick="switchTab('recetas')" id="nav-m-recetas" class="px-2.5 py-1.5 rounded-lg text-forest-800 font-bold bg-forest-100 dark:bg-forest-900/60 dark:text-forest-200">Recetas</button>
+      <button onclick="switchTab('estrategia')" id="nav-m-estrategia" class="px-2.5 py-1.5 rounded-lg text-cream-800 dark:text-cream-300">Estrategia</button>
+      <button onclick="switchTab('manual')" id="nav-m-manual" class="px-2.5 py-1.5 rounded-lg text-cream-800 dark:text-cream-300">Crear</button>
+      <button onclick="switchTab('importar')" id="nav-m-importar" class="px-2.5 py-1.5 rounded-lg text-cream-800 dark:text-cream-300">Link</button>
+    </div>
+  </header>
+
+  <!-- Notification Banner -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-24 opacity-0 transition-all duration-300 bg-forest-900 text-cream-100 dark:bg-forest-100 dark:text-forest-900 px-4 py-3 rounded-2xl shadow-xl flex items-center gap-3 border border-forest-700/30">
+    <i data-lucide="check-circle-2" class="w-5 h-5 text-forest-400 dark:text-forest-600"></i>
+    <span id="toast-text" class="text-xs sm:text-sm font-medium">Acción completada</span>
+  </div>
+
+  <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- TAB 1: RECETAS EXPLORER -->
+    <section id="tab-recetas" class="space-y-6">
+      
+      <!-- Search & Filters in Warm Beige Card -->
+      <div class="bg-white dark:bg-[#1E251D] p-5 rounded-3xl border border-[#E8E1D3] dark:border-[#2D382C] shadow-xs space-y-4">
+        <div class="flex flex-col md:flex-row gap-3">
+          <div class="relative flex-1">
+            <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3.5 text-cream-600 dark:text-cream-400"></i>
+            <input type="text" id="recipe-search" oninput="renderRecipes()" placeholder="Buscar por quesadilla, smash burger, arrachera, queso..." 
+              class="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-[#E8E1D3] dark:border-[#323E30] bg-cream-50 dark:bg-[#252E23] text-sm focus:outline-none focus:ring-2 focus:ring-forest-500 text-slate-800 dark:text-cream-100 placeholder-cream-600/70">
+          </div>
+          
+          <div class="flex gap-2">
+            <select id="filter-meal" onchange="renderRecipes()" class="px-3.5 py-2.5 rounded-2xl border border-[#E8E1D3] dark:border-[#323E30] bg-cream-50 dark:bg-[#252E23] text-xs sm:text-sm font-medium focus:ring-2 focus:ring-forest-500">
+              <option value="all">Todas las comidas</option>
+              <option value="Desayuno">Desayuno</option>
+              <option value="Comida">Comida</option>
+              <option value="Cena">Cena</option>
+              <option value="Snack">Aperitivo / Snack</option>
+              <option value="Bebida">Bebida</option>
+            </select>
+            
+            <select id="filter-carb" onchange="renderRecipes()" class="px-3.5 py-2.5 rounded-2xl border border-[#E8E1D3] dark:border-[#323E30] bg-cream-50 dark:bg-[#252E23] text-xs sm:text-sm font-medium focus:ring-2 focus:ring-forest-500">
+              <option value="all">Carbohidratos: Todos</option>
+              <option value="low">Keto / Ultra Low Carb (< 15g)</option>
+              <option value="moderate">Moderado (< 30g)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Tag Quick Filters -->
+        <div class="flex items-center gap-1.5 flex-wrap pt-1 text-xs">
+          <span class="text-cream-800 dark:text-cream-400 font-semibold mr-1">Filtros sensoriales:</span>
+          <button onclick="toggleTagFilter('#Crujiente')" class="tag-btn px-3 py-1 rounded-full border border-crunch-warm/40 text-crunch-warm bg-crunch-warm/10 hover:bg-crunch-warm/20 transition font-medium">#Crujiente</button>
+          <button onclick="toggleTagFilter('#AirFryer')" class="tag-btn px-3 py-1 rounded-full border border-forest-400/40 text-forest-700 dark:text-forest-300 bg-forest-100 dark:bg-forest-900/30 hover:bg-forest-200/50 transition font-medium">#AirFryer</button>
+          <button onclick="toggleTagFilter('#En10Minutos')" class="tag-btn px-3 py-1 rounded-full border border-[#D5C7B0] dark:border-[#3C493A] text-cream-900 dark:text-cream-200 bg-cream-200/40 dark:bg-[#252E23] hover:bg-cream-200 transition font-medium">#En10Minutos</button>
+          <button onclick="toggleTagFilter('#SinVerduraBabosa')" class="tag-btn px-3 py-1 rounded-full border border-forest-500/40 text-forest-800 dark:text-forest-200 bg-forest-50 dark:bg-forest-900/40 hover:bg-forest-100 transition font-medium">#SinVerduraBabosa</button>
+          <button onclick="toggleTagFilter('#QuesoDorado')" class="tag-btn px-3 py-1 rounded-full border border-amber-500/40 text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-900/20 hover:bg-amber-100 transition font-medium">#QuesoDorado</button>
+          <button onclick="resetFilters()" class="text-xs text-crunch-warm hover:underline ml-2">Limpiar filtros</button>
+        </div>
+      </div>
+
+      <!-- Recipe Grid -->
+      <div id="recipe-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Generado dinámicamente -->
+      </div>
+    </section>
+
+    <!-- TAB 2: GUÍA ESTRATÉGICA AUDHD + GLUCOSA -->
+    <section id="tab-estrategia" class="hidden space-y-6">
+      <!-- Hero Card Verde Bosque con acentos Beige -->
+      <div class="bg-gradient-to-br from-forest-800 via-forest-700 to-[#1F341D] rounded-3xl p-6 sm:p-9 text-[#FAF7F0] shadow-md border border-forest-900">
+        <div class="max-w-3xl space-y-3">
+          <span class="inline-block px-3 py-1 rounded-full bg-forest-500/30 text-cream-200 text-xs font-bold uppercase tracking-wider">
+            Protocolo Sensorial PikyEatr
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+            Hackear la comida que ama sin desatar la insulina
+          </h2>
+          <p class="text-cream-100 text-sm sm:text-base leading-relaxed opacity-95">
+            El cerebro AuDHD (Autismo + TDAH) no busca "comer mal" por capricho: el TDAH necesita dopamina rápida (carbohidratos y grasa fundida) y el rasgo autista exige seguridad sensorial constante (textura crujiente, crocante y predecible; rechazo a lo blando, fibroso o húmedo). La clave es cambiar los cimientos metabólicos sin alterar la experiencia crocante.
+          </p>
+        </div>
+      </div>
+
+      <!-- Estrategias Clave en Tarjetas Beige y Verde -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white dark:bg-[#1E251D] p-6 rounded-3xl border border-[#E8E1D3] dark:border-[#2D382C] shadow-xs space-y-3">
+          <div class="w-11 h-11 rounded-2xl bg-amber-100 dark:bg-amber-950/60 flex items-center justify-center text-amber-700 dark:text-amber-300">
+            <i data-lucide="cookie" class="w-5 h-5"></i>
+          </div>
+          <h3 class="text-lg font-bold text-forest-900 dark:text-cream-100">1. La regla del "Crunch" Innegociable</h3>
+          <p class="text-sm text-cream-900/80 dark:text-cream-200/80 leading-relaxed">
+            Las texturas blandas, hervidas o tibias generan rechazo visceral. La <strong>Freidora de Aire (Air Fryer)</strong> es la aliada número 1: dora quesadillas, milanesas y tacos con la misma costra crujiente de la fritura tradicional, pero en 6-8 minutos y sin aceites vegetales oxidados.
+          </p>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 dark:bg-[#1E251D] p-6 rounded-3xl border border-[#E8E1D3] dark:border-[#2D382C] shadow-xs space-y-3">
+          <div class="w-11 h-11 rounded-2xl bg-forest-100 dark:bg-forest-900/50 flex items-center justify-center text-forest-700 dark:text-forest-300">
+            <i data-lucide="shield-check" class="w-5 h-5"></i>
+          </div>
+          <h3 class="text-lg font-bold text-forest-900 dark:text-cream-100">2. Blindaje de Glucosa: "Proteína Primero"</h3>
+          <p class="text-sm text-cream-900/80 dark:text-cream-200/80 leading-relaxed">
+            Nunca carbohidrato con el estómago vacío. El queso real (oaxaca, manchego), la carne smash y los empanizados con harina de almendra o parmesano aplanan la curva de absorción de glucosa. Si come pizza o molletes, que empiece por el queso y la carne dorada.
+          </p>
+        </div>
+
+        <div class="bg-white dark:bg-[#1E251D] p-6 rounded-3xl border border-[#E8E1D3] dark:border-[#2D382C] shadow-xs space-y-3">
+          <div class="w-11 h-11 rounded-2xl bg-cream-200 dark:bg-[#252E23] flex items-center justify-center text-forest-800 dark:text-cream-200">
+            <i data-lucide="zap-off" class="w-5 h-5"></i>
+          </div>
+          <h3 class="text-lg font-bold text-forest-900 dark:text-cream-100">3. Solución a "Cero Sobras": Mise en Place Congelado</h3>
+          <p class="text-sm text-cream-900/80 dark:text-cream-200/80 leading-relaxed">
+            Para la selectividad alimentaria, la comida recalentada huele distinto y pierde firmeza. <strong>No cocines guisados para recalentar</strong>: congela carnes para hamburguesa crudas en porciones individuales o pechugas empanizadas en parmesano. Se sacan del congelador directo a la freidora de aire caliente: recién hecho en 10 minutos sin cocinar desde cero.
+          </p>
+        </div>
+
+        <div class="bg-white dark:bg-[#1E251D] p-6 rounded-3xl border border-[#E8E1D3] dark:border-[#2D382C] shadow-xs space-y-3">
+          <div class="w-11 h-11 rounded-2xl bg-forest-50 dark:bg-forest-900/40 flex items-center justify-center text-forest-700 dark:text-forest-300">
+            <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+          </div>
+          <h3 class="text-lg font-bold text-forest-900 dark:text-cream-100">4. Reemplazos Indoloros (Misma Dopamina)</h3>
+          <ul class="text-xs space-y-2.5 text-cream-900/80 dark:text-cream-200/80">
+            <li class="flex items-start gap-2">
+              <span class="text-forest-600 font-bold">✓</span>
+              <span><strong>Refrescos:</strong> Migración inmediata a Refrescos Zero o agua mineral helada con limón y sal en vaso escarchado.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-forest-600 font-bold">✓</span>
+              <span><strong>Bolillo de harina:</strong> Pan de masa madre de costra gruesa muy tostado (menor pico glucémico) o panes altos en proteína.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-forest-600 font-bold">✓</span>
+              <span><strong>Quesadillas fritas:</strong> Tortilla nixtamalizada o de linaza/nopal con spray de aceite de aguacate en freidora de aire a 200°C.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: CREAR RECETA MANUAL CON CALCULADORA -->
+    <section id="tab-manual" class="hidden max-w-4xl mx-auto space-y-6">
+      <div class="bg-white dark:bg-[#1E251D] p-6 sm:p-8 rounded-3xl border border-[#E8E1D3] dark:border-[#2D382C] shadow-xs space-y-6">
+        <div>
+          <h2 class="text-xl font-bold flex items-center gap-2 text-forest-900 dark:text-forest-100">
+            <i data-lucide="chef-hat" class="w-6 h-6 text-forest-600"></i>
+            Creador Manual con Desglose Nutricional PikyEatr
+          </h2>
+          <p class="text-xs sm:text-sm text-cream-800/80 dark:text-cream-300/80">
+            Añade ingredientes y cantidades: el sistema estimará calorías, carbohidratos netos y proteínas automáticamente.
+          </p>
+        </div>
+
+        <form id="recipe-form" onsubmit="saveManualRecipe(event)" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="md:col-span-2 space-y-1">
+              <label class="text-xs font-bold text-forest-800 dark:text-cream-200">Nombre de la Receta</label>
+              <input type="text" id="form-title" required placeholder="Ej: Costra Dorada de Queso con Arrachera" 
+                class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E8E1D3] dark:border-[#323E30] bg-cream-50 dark:bg-[#252E23] text-sm focus:ring-2 focus:ring-forest-500">
+            </div>
+            <div class="space-y-1">
+              <label class="text-xs font-bold text-forest-800 dark:text-cream-200">Tipo de Comida</label>
+              <select id="form-meal" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E8E1D3] dark:border-[#323E30] bg-cream-50 dark:bg-[#252E23] text-sm focus:ring-2 focus:ring-forest-500">
+                <option value="Desayuno">Desayuno</option>
+                <option value="Comida">Comida</option>
+                <option value="Cena">Cena</option>
+                <option value="Snack">Aperitivo / Snack</option>
+                <option value="Bebida">Bebida</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="space-y-1">
+              <label class="text-xs font-bold text-forest-800 dark:text-cream-200">Tiempo de Preparación</label>
+              <input type="text" id="form-time" required placeholder="Ej: 8 min" 
+                class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E8E1D3] dark:border-[#323E30] bg-cream-50 dark:bg-[#252E23] text-sm">
+            </div>
+            <div class="space-y-1">
+              <label class="text-xs font-bold text-forest-800 dark:text-cream-200">Nivel de Crunch</label>
+              <select id="form-crunch" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E8E1D3] dark:border-[#323E30] bg-cream-50 dark:bg-[#252E23] text-sm">
+                <option value="Alto">Crunch Alto (Bien Dorado / Crujiente)</option>
+                <option value="Medio">Crunch Medio / Tostado Firme</option>
+                <option value="Suave">Textura Firme / Cero Babosa</option>
+              </select>
+            </div>
+            <div class="space-y-1">
+              <label class="text-xs font-bold text-forest-800 dark:text-cream-200">Tags (Separados por coma)</label>
+              <input type="text" id="form-tags" placeholder="#AirFryer, #Crujiente, #QuesoDorado" 
+                class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E8E1D3] dark:border-[#323E30] bg-cream-50 dark:bg-[#252E23] text-sm">
+            </div>
+          </div>
+
+          <!-- Dynamic Ingredients List -->
+          <div class="space-y-3 pt-2">
+            <div class="flex items-center justify-between">
+              <label class="text-sm font-bold flex items-center gap-2 text-forest-900 dark:text-forest-100">
+                <i data-lucide="layers" class="w-4 h-4 text-forest-600"></i> Ingredientes, Cantidades y Tipos
+              </label>
+              <button type="button" onclick="addIngredientRow()" class="px-3 py-1.5 text-xs font-bold rounded-xl bg-forest-100 text-forest-800 dark:bg-forest-900/60 dark:text-forest-200 hover:bg-forest-200 transition">
+                + Añadir Ingrediente
+              </button>
+            </div>
+            
+            <div id="ingredients-container" class="space-y-2">
+              <!-- Renglones agregados por JS -->
+            </div>
+          </div>
+
+          <!-- Nutritional Preview Widget -->
+          <div class="bg-cream-100 dark:bg-[#252E23] rounded-3xl p-5 border border-[#E8E1D3] dark:border-[#323E30]">
+            <h4 class="text-xs font-bold text-cream-800 dark:text-cream-300 uppercase tracking-wider mb-3">
+              Cálculo Nutricional Estimado en Tiempo Real
+            </h4>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+              <div class="bg-white dark:bg-[#1E251D] p-3 rounded-2xl shadow-xs border border-[#E8E1D3]/60 dark:border-[#323E30]">
+                <span class="text-[11px] text-cream-700 dark:text-cream-400 block font-semibold">Calorías</span>
+                <span id="calc-calories" class="text-xl font-extrabold text-amber-600 dark:text-amber-400">0</span> <span class="text-xs text-cream-600">kcal</span>
+              </div>
+              <div class="bg-white dark:bg-[#1E251D] p-3 rounded-2xl shadow-xs border border-[#E8E1D3]/60 dark:border-[#323E30]">
+                <span class="text-[11px] text-cream-700 dark:text-cream-400 block font-semibold">Proteína</span>
+                <span id="calc-protein" class="text-xl font-extrabold text-forest-600 dark:text-forest-400">0</span> <span class="text-xs text-cream-600">g</span>
+              </div>
+              <div class="bg-white dark:bg-[#1E251D] p-3 rounded-2xl shadow-xs border border-[#E8E1D3]/60 dark:border-[#323E30]">
+                <span class="text-[11px] text-cream-700 dark:text-cream-400 block font-semibold">Carbs Netos</span>
+                <span id="calc-carbs" class="text-xl font-extrabold text-crunch-warm">0</span> <span class="text-xs text-cream-600">g</span>
+              </div>
+              <div class="bg-white dark:bg-[#1E251D] p-3 rounded-2xl shadow-xs border border-[#E8E1D3]/60 dark:border-[#323E30]">
+                <span class="text-[11px] text-cream-700 dark:text-cream-400 block font-semibold">Grasas</span>
+                <span id="calc-fat" class="text-xl font-extrabold text-[#966138]">0</span> <span class="text-xs text-cream-600">g</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Instructions & Tips -->
+          <div class="space-y-1">
+            <label class="text-xs font-bold text-forest-800 dark:text-cream-200">Preparación Exprés (Foco en Freidora de Aire / Sin Sobras)</label>
+            <textarea id="form-steps" rows="3" required placeholder="1. Colocar las tortillas en airfryer con queso y carne. 2. Hornear a 200°C por 7 minutos hasta que queden bien doradas..." 
+              class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E8E1D3] dark:border-[#323E30] bg-cream-50 dark:bg-[#252E23] text-sm focus:ring-2 focus:ring-forest-500"></textarea>
+          </div>
+
+          <div class="space-y-1">
+            <label class="text-xs font-bold text-forest-800 dark:text-cream-200">Tip de Glucosa y Sensorial</label>
+            <input type="text" id="form-tip" placeholder="Ej: Comer primero el queso crujiente y la carne para amortiguar el pico glucémico del pan." 
+              class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E8E1D3] dark:border-[#323E30] bg-cream-50 dark:bg-[#252E23] text-sm">
+          </div>
+
+          <button type="submit" class="w-full py-3.5 bg-forest-600 hover:bg-forest-700 text-white font-bold rounded-2xl shadow-sm transition flex items-center justify-center gap-2">
+            <i data-lucide="check" class="w-5 h-5"></i> Guardar en PikyEatr
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- TAB 4: IMPORTAR RECETA POR LINK O ASISTIDO -->
+    <section id="tab-importar" class="hidden max-w-3xl mx-auto space-y-6">
+      <div class="bg-white dark:bg-[#1E251D] p-6 sm:p-8 rounded-3xl border border-[#E8E1D3] dark:border-[#2D382C] shadow-xs space-y-6">
+        <div>
+          <h2 class="text-xl font-bold flex items-center gap-2 text-forest-900 dark:text-forest-100">
+            <i data-lucide="link-2" class="w-6 h-6 text-forest-600"></i>
+            Extractor de Recetas desde la Web
+          </h2>
+          <p class="text-xs sm:text-sm text-cream-800/80 dark:text-cream-300/80">
+            Pega el enlace de una receta externa. Extraerá automáticamente los ingredientes, pasos y calculará los macros.
+          </p>
+        </div>
+
+        <!-- URL Input -->
+        <div class="space-y-3">
+          <label class="text-xs font-bold text-forest-800 dark:text-cream-200">Enlace de la receta</label>
+          <div class="flex flex-col sm:flex-row gap-2">
+            <input type="url" id="import-url" placeholder="https://recetasfaciles.com/smash-burger-queso" 
+              class="flex-1 px-4 py-2.5 rounded-2xl border border-[#E8E1D3] dark:border-[#323E30] bg-cream-50 dark:bg-[#252E23] text-sm focus:ring-2 focus:ring-forest-500">
+            <button onclick="fetchRecipeFromUrl()" id="btn-fetch" class="px-5 py-2.5 bg-forest-600 hover:bg-forest-700 text-white font-bold rounded-2xl shadow-xs transition flex items-center justify-center gap-2 text-sm">
+              <i data-lucide="download" class="w-4 h-4"></i> Extraer
+            </button>
+          </div>
+          <p class="text-xs text-cream-700 dark:text-cream-400">Si la página tiene bloqueos CORS de origen, puedes pegar el texto copiado debajo.</p>
+        </div>
+
+        <div class="relative py-2 flex items-center justify-center">
+          <div class="border-t border-[#E8E1D3] dark:border-[#323E30] w-full"></div>
+          <span class="bg-white dark:bg-[#1E251D] px-3 text-xs text-cream-600 dark:text-cream-400 font-bold uppercase tracking-wider absolute">O pegar texto directamente</span>
+        </div>
+
+        <!-- Fallback text pasted mode -->
+        <div class="space-y-3">
+          <label class="text-xs font-bold text-forest-800 dark:text-cream-200">Modo Asistido (Copia y pega la receta aquí)</label>
+          <textarea id="import-text-pasted" rows="4" placeholder="Pega los ingredientes y modo de preparación que encontraste en internet..." 
+            class="w-full px-4 py-2.5 rounded-2xl border border-[#E8E1D3] dark:border-[#323E30] bg-cream-50 dark:bg-[#252E23] text-sm focus:ring-2 focus:ring-forest-500"></textarea>
+          <button onclick="parsePastedText()" class="w-full py-3 bg-cream-300/80 hover:bg-cream-300 dark:bg-[#2B3529] dark:hover:bg-[#344032] text-forest-900 dark:text-cream-100 font-bold rounded-2xl text-xs sm:text-sm transition flex items-center justify-center gap-2">
+            <i data-lucide="wand-2" class="w-4 h-4 text-forest-600"></i> Interpretar y Calcular Macros
+          </button>
+        </div>
+
+        <!-- Preview Extracted Area -->
+        <div id="import-preview" class="hidden border border-forest-300 dark:border-forest-800 bg-forest-50/70 dark:bg-forest-950/30 p-5 rounded-3xl space-y-3">
+          <div class="flex items-center gap-2 text-forest-800 dark:text-forest-200 font-bold text-sm">
+            <i data-lucide="check-circle" class="w-4 h-4 text-forest-600"></i>
+            <span>Receta Lista para Importar</span>
+          </div>
+          <div id="import-preview-content" class="text-xs text-cream-900 dark:text-cream-200 space-y-1.5"></div>
+          <button onclick="confirmImportedRecipe()" class="px-5 py-2.5 bg-forest-600 hover:bg-forest-700 text-white font-bold rounded-2xl text-xs shadow-xs transition">
+            Guardar en mi Recetario PikyEatr
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL: DETALLE DE RECETA -->
+  <div id="recipe-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white dark:bg-[#1E251D] rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-[#E8E1D3] dark:border-[#2D382C] shadow-2xl p-6 sm:p-8 space-y-6 relative">
+      <button onclick="closeRecipeModal()" class="absolute top-5 right-5 p-2 rounded-full hover:bg-cream-100 dark:hover:bg-[#252E23] text-cream-700 dark:text-cream-300 transition">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div id="modal-content" class="space-y-5">
+        <!-- Rellenado por JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT DE PIKYEATR -->
+  <script>
+    // RECETAS BASE SENSORIALES Y METABÓLICAS
+    const DEFAULT_RECIPES = [
+      {
+        id: "rec_1",
+        title: "Smash Burger Doble Costra en Pan Tostado Rústico",
+        meal: "Comida",
+        time: "10 min",
+        crunch: "Alto",
+        tags: ["#Crujiente", "#AirFryer", "#AltoEnProteina", "#QuesoDorado", "#En10Minutos"],
+        tip: "La costra crocante smash aporta dopamina inmediata. Comer primero la porción de carne y queso antes del pan para que la proteína aplane la curva de glucosa.",
+        calories: 520,
+        protein: 38,
+        carbs: 7,
+        fat: 36,
+        ingredients: [
+          { name: "Carne molida de res (80/20)", amount: "150g", type: "Proteína", cal: 375, p: 30, c: 0, f: 28 },
+          { name: "Queso Manchego o Cheddar añejo", amount: "40g", type: "Grasa", cal: 150, p: 9, c: 1, f: 12 },
+          { name: "Pan rústico de masa madre o bollo keto bien dorado", amount: "1 pieza", type: "Carbohidrato", cal: 80, p: 6, c: 5, f: 3 }
+        ],
+        steps: "1. Forma 2 bolas de carne cruda y aplástalas con fuerza en sartén de hierro o freidora muy caliente hasta que los bordes queden casi negros y crocantes. 2. Agrega queso para que se derrita al instante. 3. Tuesta el pan para que quede rígido y crujiente (nada de texturas gomosas). Montar y comer inmediatamente recién hecho."
+      },
+      {
+        id: "rec_2",
+        title: "Quesadilla Dorada Air Fryer con Pollo Asado y Queso Hebra",
+        meal: "Cena",
+        time: "8 min",
+        crunch: "Alto",
+        tags: ["#Crujiente", "#AirFryer", "#SinVerduraBabosa", "#En10Minutos"],
+        tip: "El aire a 200°C crea el crujido de la fritura tradicional sin los 25g de grasa de aceite recalentado. Cero sensación babosa.",
+        calories: 360,
+        protein: 34,
+        carbs: 14,
+        fat: 18,
+        ingredients: [
+          { name: "Tortilla de maíz nixtamalizado o nopal/linaza", amount: "2 piezas", type: "Carbohidrato", cal: 100, p: 3, c: 18, f: 1 },
+          { name: "Queso Oaxaca / Hebra real", amount: "50g", type: "Grasa", cal: 145, p: 11, c: 1, f: 11 },
+          { name: "Pechuga de pollo deshebrada lista", amount: "80g", type: "Proteína", cal: 130, p: 25, c: 0, f: 3 }
+        ],
+        steps: "1. Rellena las tortillas con el queso y el pollo frío. 2. Pincela con apenas unas gotas de aceite de oliva o aguacate. 3. Coloca en la freidora de aire a 200°C por 7-8 minutos hasta que la tortilla truene al morderla."
+      },
+      {
+        id: "rec_3",
+        title: "Molletes Crunch de Masa Madre con Costra de Manchego",
+        meal: "Desayuno",
+        time: "9 min",
+        crunch: "Alto",
+        tags: ["#Crujiente", "#BajoIndiceGlucemico", "#QuesoDorado", "#En10Minutos"],
+        tip: "La masa madre fermentada naturalmente genera menor pico glucémico que el bolillo blanco de panadería. Tostar primero el pan seco evita que se ablande con los frijoles.",
+        calories: 410,
+        protein: 22,
+        carbs: 32,
+        fat: 20,
+        ingredients: [
+          { name: "Pan de masa madre rebanada gruesa", amount: "1 rebanada", type: "Carbohidrato", cal: 150, p: 5, c: 28, f: 1 },
+          { name: "Frijoles negros machacados caseros", amount: "3 cdas", type: "Carbohidrato", cal: 90, p: 5, c: 14, f: 2 },
+          { name: "Queso Manchego o Gouda para gratinar", amount: "50g", type: "Grasa", cal: 180, p: 12, c: 1, f: 14 }
+        ],
+        steps: "1. Tuesta la rebanada de pan en seco primero en la freidora durante 2 minutos para sellar la miga. 2. Unta los frijoles y cubre completamente con el queso hasta las orillas. 3. Gratina a 205°C durante 6 minutos hasta lograr una costra dorada burbujeante."
+      },
+      {
+        id: "rec_4",
+        title: "Pizzadilla Pepperoni con Costra Doble Tostada",
+        meal: "Cena",
+        time: "6 min",
+        crunch: "Alto",
+        tags: ["#Crujiente", "#AirFryer", "#AltoEnProteina", "#QuesoDorado"],
+        tip: "Da el golpe de sabor y grasa de una pizza comercial pero con solo 8g de carbohidratos netos, evitando la pesadez y el letargo glucémico.",
+        calories: 390,
+        protein: 24,
+        carbs: 8,
+        fat: 28,
+        ingredients: [
+          { name: "Base de tortilla de linaza o harina keto", amount: "1 pieza", type: "Carbohidrato", cal: 50, p: 4, c: 4, f: 2 },
+          { name: "Salsa de tomate especiada sin azúcar añadida", amount: "2 cdas", type: "Verdura", cal: 20, p: 1, c: 4, f: 0 },
+          { name: "Queso Mozzarella rallado", amount: "60g", type: "Grasa", cal: 180, p: 14, c: 1, f: 13 },
+          { name: "Pepperoni rebanado", amount: "6 rebanadas", type: "Proteína", cal: 130, p: 5, c: 0, f: 12 }
+        ],
+        steps: "1. Coloca la base directamente en la charola de la freidora de aire. 2. Esparce la salsa de tomate, cubre con el queso mozzarella y las rebanadas de pepperoni. 3. Cocina a 195°C durante 5 a 6 minutos hasta que los bordes estén crujientes y el pepperoni dorado."
+      },
+      {
+        id: "rec_5",
+        title: "Bocados Crocantes de Coliflor Parmesana (Estilo Totopo)",
+        meal: "Snack",
+        time: "12 min",
+        crunch: "Alto",
+        tags: ["#Crujiente", "#AirFryer", "#SinVerduraBabosa", "#QuesoDorado"],
+        tip: "Al hornearse seca con parmesano pierde toda humedad y olor a verdura hervida. Se convierte en una botana salada crujiente.",
+        calories: 190,
+        protein: 14,
+        carbs: 7,
+        fat: 12,
+        ingredients: [
+          { name: "Floretes de coliflor cortados pequeños y secos", amount: "150g", type: "Verdura", cal: 35, p: 3, c: 5, f: 0 },
+          { name: "Queso Parmesano rallado fino", amount: "35g", type: "Grasa", cal: 140, p: 11, c: 1, f: 10 },
+          { name: "Aceite de oliva, sal de mar y ajo en polvo", amount: "1 cdta", type: "Grasa", cal: 40, p: 0, c: 0, f: 4 }
+        ],
+        steps: "1. Seca con toalla de papel los floretes (crucial para eliminar agua). 2. Mezcla con el aceite, sal y reboza con abundante parmesano. 3. Cocina a 200°C en la freidora durante 12 minutos hasta que las puntas queden tostadas y crocantes."
+      }
+    ];
+
+    let recipes = [];
+    let activeTagFilter = null;
+    let pendingImportedRecipe = null;
+
+    function initApp() {
+      const stored = localStorage.getItem('piky_eatr_recipes');
+      if (stored) {
+        try {
+          recipes = JSON.parse(stored);
+        } catch (e) {
+          recipes = [...DEFAULT_RECIPES];
+        }
+      } else {
+        recipes = [...DEFAULT_RECIPES];
+        saveToLocalStorage();
+      }
+
+      addIngredientRow();
+      addIngredientRow();
+
+      renderRecipes();
+      lucide.createIcons();
+    }
+
+    function saveToLocalStorage() {
+      localStorage.setItem('piky_eatr_recipes', JSON.stringify(recipes));
+    }
+
+    // NAVEGACIÓN ENTRE PESTAÑAS
+    function switchTab(tabId) {
+      const tabs = ['recetas', 'estrategia', 'manual', 'importar'];
+      tabs.forEach(t => {
+        const el = document.getElementById(`tab-${t}`);
+        const nav = document.getElementById(`nav-${t}`);
+        const navM = document.getElementById(`nav-m-${t}`);
+
+        if (t === tabId) {
+          el.classList.remove('hidden');
+          if (nav) {
+            nav.classList.add('text-forest-800', 'dark:text-forest-200', 'bg-forest-100/90', 'dark:bg-forest-900/40');
+            nav.classList.remove('text-cream-800', 'dark:text-cream-200');
+          }
+          if (navM) {
+            navM.classList.add('text-forest-800', 'font-bold', 'bg-forest-100', 'dark:bg-forest-900/60', 'dark:text-forest-200');
+            navM.classList.remove('text-cream-800', 'dark:text-cream-300');
+          }
+        } else {
+          el.classList.add('hidden');
+          if (nav) {
+            nav.classList.remove('text-forest-800', 'dark:text-forest-200', 'bg-forest-100/90', 'dark:bg-forest-900/40');
+            nav.classList.add('text-cream-800', 'dark:text-cream-200');
+          }
+          if (navM) {
+            navM.classList.remove('text-forest-800', 'font-bold', 'bg-forest-100', 'dark:bg-forest-900/60', 'dark:text-forest-200');
+            navM.classList.add('text-cream-800', 'dark:text-cream-300');
+          }
+        }
+      });
+      lucide.createIcons();
+    }
+
+    // RENDERIZADO DE RECETARIO CON FILTROS
+    function renderRecipes() {
+      const grid = document.getElementById('recipe-grid');
+      const search = document.getElementById('recipe-search').value.toLowerCase();
+      const meal = document.getElementById('filter-meal').value;
+      const carb = document.getElementById('filter-carb').value;
+
+      const filtered = recipes.filter(r => {
+        const matchesSearch = r.title.toLowerCase().includes(search) || 
+          r.ingredients.some(i => i.name.toLowerCase().includes(search)) ||
+          r.tags.some(t => t.toLowerCase().includes(search));
+
+        const matchesMeal = meal === 'all' || r.meal === meal;
+        
+        let matchesCarb = true;
+        if (carb === 'low') matchesCarb = r.carbs <= 15;
+        if (carb === 'moderate') matchesCarb = r.carbs <= 30;
+
+        let matchesTag = true;
+        if (activeTagFilter) {
+          matchesTag = r.tags.includes(activeTagFilter);
+        }
+
+        return matchesSearch && matchesMeal && matchesCarb && matchesTag;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full py-16 text-center text-cream-700 dark:text-cream-400">
+            <i data-lucide="cookie" class="w-12 h-12 mx-auto mb-3 opacity-40"></i>
+            <p class="font-medium text-base">No hay recetas que coincidan con esta búsqueda.</p>
+            <p class="text-xs text-cream-600 mt-1">Prueba con palabras como queso, airfryer o limpia los filtros.</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      grid.innerHTML = filtered.map(r => `
+        <div class="bg-white dark:bg-[#1E251D] rounded-3xl border border-[#E8E1D3] dark:border-[#2D382C] shadow-xs hover:shadow-md transition flex flex-col justify-between overflow-hidden group">
+          <div class="p-6 space-y-4">
+            
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-bold px-3 py-1 rounded-full bg-cream-100 dark:bg-[#252E23] text-forest-800 dark:text-forest-200">
+                ${r.meal}
+              </span>
+              <div class="flex items-center gap-1.5">
+                <span class="badge-crunch text-white text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider flex items-center gap-1">
+                  <i data-lucide="flame" class="w-3 h-3"></i> ${r.crunch} Crunch
+                </span>
+                <span class="text-xs text-cream-700 dark:text-cream-400 flex items-center gap-1 font-semibold">
+                  <i data-lucide="clock" class="w-3 h-3"></i> ${r.time}
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="font-bold text-base text-[#2C2825] dark:text-[#E8EDE6] group-hover:text-forest-600 dark:group-hover:text-forest-400 transition line-clamp-2">
+                ${r.title}
+              </h3>
+              <p class="text-xs text-cream-800/80 dark:text-cream-300/70 mt-1 line-clamp-2">${r.tip || 'Segura para selectividad sensorial y glucosa.'}</p>
+            </div>
+
+            <!-- Macro Bar Warm Beige -->
+            <div class="grid grid-cols-4 gap-1.5 bg-cream-50 dark:bg-[#252E23] p-2.5 rounded-2xl text-center text-xs border border-[#E8E1D3]/50 dark:border-[#323E30]">
+              <div>
+                <span class="text-[10px] text-cream-700 dark:text-cream-400 block font-semibold">Calorías</span>
+                <span class="font-extrabold text-amber-700 dark:text-amber-400">${r.calories}</span>
+              </div>
+              <div>
+                <span class="text-[10px] text-forest-600 block font-semibold">Prot</span>
+                <span class="font-extrabold text-forest-700 dark:text-forest-300">${r.protein}g</span>
+              </div>
+              <div>
+                <span class="text-[10px] text-crunch-warm block font-semibold">Carbs</span>
+                <span class="font-extrabold text-crunch-warm">${r.carbs}g</span>
+              </div>
+              <div>
+                <span class="text-[10px] text-[#8C5E39] block font-semibold">Grasa</span>
+                <span class="font-extrabold text-[#8C5E39] dark:text-[#B68B66]">${r.fat}g</span>
+              </div>
+            </div>
+
+            <!-- Tags -->
+            <div class="flex flex-wrap gap-1">
+              ${r.tags.map(t => `<span class="text-[10px] font-medium text-cream-900/80 dark:text-cream-200 bg-cream-100 dark:bg-[#2A3428] px-2 py-0.5 rounded-md">${t}</span>`).join('')}
+            </div>
+          </div>
+
+          <div class="p-4 bg-cream-50/70 dark:bg-[#242C22]/60 border-t border-[#E8E1D3] dark:border-[#2D382C] flex items-center justify-between">
+            <button onclick="openRecipeModal('${r.id}')" class="text-xs font-bold text-forest-700 dark:text-forest-300 hover:underline flex items-center gap-1">
+              Ver Preparación <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </button>
+            <button onclick="deleteRecipe('${r.id}')" class="text-cream-500 hover:text-rose-600 transition p-1.5 rounded-lg hover:bg-cream-200/50" title="Eliminar receta">
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+    }
+
+    function toggleTagFilter(tag) {
+      activeTagFilter = (activeTagFilter === tag) ? null : tag;
+      renderRecipes();
+    }
+
+    function resetFilters() {
+      activeTagFilter = null;
+      document.getElementById('recipe-search').value = '';
+      document.getElementById('filter-meal').value = 'all';
+      document.getElementById('filter-carb').value = 'all';
+      renderRecipes();
+    }
+
+    // MODAL DE DETALLE
+    function openRecipeModal(id) {
+      const r = recipes.find(x => x.id === id);
+      if (!r) return;
+
+      const modalContent = document.getElementById('modal-content');
+      modalContent.innerHTML = `
+        <div class="space-y-4">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="text-xs font-bold px-3 py-1 rounded-full bg-forest-100 text-forest-800 dark:bg-forest-900/60 dark:text-forest-200">${r.meal}</span>
+            <span class="text-xs font-bold px-3 py-1 rounded-full bg-crunch-warm/15 text-crunch-warm">${r.crunch} Crunch</span>
+            <span class="text-xs text-cream-700 dark:text-cream-400 font-semibold flex items-center gap-1">
+              <i data-lucide="clock" class="w-3.5 h-3.5"></i> ${r.time}
+            </span>
+          </div>
+
+          <h2 class="text-2xl font-black text-forest-950 dark:text-cream-100">${r.title}</h2>
+
+          <div class="p-4 rounded-2xl bg-cream-100 dark:bg-[#252E23] border border-[#E8E1D3] dark:border-[#323E30] text-xs leading-relaxed flex items-start gap-3">
+            <div class="p-1 rounded-lg bg-amber-200 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200 shrink-0">
+              <i data-lucide="sparkles" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <strong class="text-forest-900 dark:text-cream-100">Estrategia AuDHD & Glucosa:</strong>
+              <p class="text-cream-800 dark:text-cream-200 mt-0.5">${r.tip}</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-4 gap-2 bg-cream-50 dark:bg-[#252E23] p-4 rounded-2xl text-center border border-[#E8E1D3]/60 dark:border-[#323E30]">
+            <div>
+              <span class="text-xs text-cream-700 dark:text-cream-400 block font-bold">Calorías</span>
+              <span class="text-lg font-black text-amber-700 dark:text-amber-400">${r.calories} kcal</span>
+            </div>
+            <div>
+              <span class="text-xs text-forest-600 block font-bold">Proteína</span>
+              <span class="text-lg font-black text-forest-700 dark:text-forest-300">${r.protein}g</span>
+            </div>
+            <div>
+              <span class="text-xs text-crunch-warm block font-bold">Carbs</span>
+              <span class="text-lg font-black text-crunch-warm">${r.carbs}g</span>
+            </div>
+            <div>
+              <span class="text-xs text-[#8C5E39] block font-bold">Grasas</span>
+              <span class="text-lg font-black text-[#8C5E39] dark:text-[#B68B66]">${r.fat}g</span>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="font-bold text-sm mb-2 text-forest-900 dark:text-cream-100 flex items-center gap-1.5">
+              <i data-lucide="shopping-basket" class="w-4 h-4 text-forest-600"></i> Ingredientes Exactos
+            </h4>
+            <ul class="space-y-1.5 text-xs">
+              ${r.ingredients.map(i => `
+                <li class="flex justify-between items-center py-1.5 border-b border-[#E8E1D3] dark:border-[#2D382C]">
+                  <span class="font-medium">${i.name}</span>
+                  <div class="flex items-center gap-2">
+                    <span class="text-[10px] px-2 py-0.5 rounded-md bg-cream-100 dark:bg-[#252E23] text-cream-800 dark:text-cream-300">${i.type || 'Alimento'}</span>
+                    <span class="font-bold text-forest-800 dark:text-forest-200">${i.amount}</span>
+                  </div>
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="font-bold text-sm mb-2 text-forest-900 dark:text-cream-100 flex items-center gap-1.5">
+              <i data-lucide="flame" class="w-4 h-4 text-forest-600"></i> Preparación al Momento (Sin Sobras)
+            </h4>
+            <p class="text-xs sm:text-sm text-cream-900 dark:text-cream-200 leading-relaxed whitespace-pre-line bg-cream-50 dark:bg-[#252E23] p-4 rounded-2xl border border-[#E8E1D3] dark:border-[#323E30]">
+              ${r.steps}
+            </p>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('recipe-modal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeRecipeModal() {
+      document.getElementById('recipe-modal').classList.add('hidden');
+    }
+
+    function deleteRecipe(id) {
+      recipes = recipes.filter(r => r.id !== id);
+      saveToLocalStorage();
+      renderRecipes();
+      showToast('Receta eliminada del recetario');
+    }
+
+    // FORMULARIO MANUAL CON CALCULADORA
+    function addIngredientRow() {
+      const container = document.getElementById('ingredients-container');
+      const div = document.createElement('div');
+      div.className = "flex gap-2 items-center ingredient-row";
+      div.innerHTML = `
+        <input type="text" placeholder="Ej: Arrachera / Queso manchego" class="ing-name flex-1 px-3 py-2 rounded-xl border border-[#E8E1D3] dark:border-[#323E30] bg-cream-50 dark:bg-[#252E23] text-xs" oninput="updateNutritionCalculation()">
+        <input type="text" placeholder="Cant. (100g / 2 pz)" class="ing-amount w-28 px-3 py-2 rounded-xl border border-[#E8E1D3] dark:border-[#323E30] bg-cream-50 dark:bg-[#252E23] text-xs" oninput="updateNutritionCalculation()">
+        <select class="ing-type w-32 px-2.5 py-2 rounded-xl border border-[#E8E1D3] dark:border-[#323E30] bg-cream-50 dark:bg-[#252E23] text-xs" onchange="updateNutritionCalculation()">
+          <option value="Proteína">Proteína</option>
+          <option value="Carbohidrato">Carbohidrato</option>
+          <option value="Grasa">Grasa</option>
+          <option value="Verdura">Verdura Crocante</option>
+        </select>
+        <button type="button" onclick="this.parentElement.remove(); updateNutritionCalculation();" class="p-1.5 text-cream-600 hover:text-rose-600">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      `;
+      container.appendChild(div);
+      lucide.createIcons();
+    }
+
+    function updateNutritionCalculation() {
+      const rows = document.querySelectorAll('.ingredient-row');
+      let totalCal = 0, totalP = 0, totalC = 0, totalF = 0;
+
+      rows.forEach(row => {
+        const name = row.querySelector('.ing-name').value.toLowerCase();
+        const amountStr = row.querySelector('.ing-amount').value.toLowerCase();
+        const type = row.querySelector('.ing-type').value;
+
+        let grams = parseFloat(amountStr) || 50;
+        if (amountStr.includes('cda') || amountStr.includes('cucharada')) grams = 15;
+        if (amountStr.includes('taza')) grams = 120;
+        if (amountStr.includes('pieza') || amountStr.includes('pz') || amountStr.includes('rebanada')) grams = 40;
+
+        if (type === 'Proteína') {
+          totalCal += grams * 1.8;
+          totalP += grams * 0.22;
+          totalF += grams * 0.08;
+        } else if (type === 'Carbohidrato') {
+          totalCal += grams * 2.2;
+          totalC += grams * 0.45;
+          totalP += grams * 0.05;
+        } else if (type === 'Grasa') {
+          totalCal += grams * 4.5;
+          totalF += grams * 0.40;
+          totalP += grams * 0.18;
+          totalC += grams * 0.02;
+        } else if (type === 'Verdura') {
+          totalCal += grams * 0.3;
+          totalC += grams * 0.04;
+          totalP += grams * 0.02;
+        }
+      });
+
+      document.getElementById('calc-calories').innerText = Math.round(totalCal);
+      document.getElementById('calc-protein').innerText = Math.round(totalP);
+      document.getElementById('calc-carbs').innerText = Math.round(totalC);
+      document.getElementById('calc-fat').innerText = Math.round(totalF);
+    }
+
+    function saveManualRecipe(e) {
+      e.preventDefault();
+
+      const title = document.getElementById('form-title').value;
+      const meal = document.getElementById('form-meal').value;
+      const time = document.getElementById('form-time').value;
+      const crunch = document.getElementById('form-crunch').value;
+      const rawTags = document.getElementById('form-tags').value;
+      const steps = document.getElementById('form-steps').value;
+      const tip = document.getElementById('form-tip').value;
+
+      const tags = rawTags.split(',')
+        .map(t => t.trim())
+        .filter(t => t.length > 0)
+        .map(t => t.startsWith('#') ? t : `#${t}`);
+
+      const rows = document.querySelectorAll('.ingredient-row');
+      const ingredients = [];
+      rows.forEach(r => {
+        const name = r.querySelector('.ing-name').value.trim();
+        const amount = r.querySelector('.ing-amount').value.trim();
+        const type = r.querySelector('.ing-type').value;
+        if (name) {
+          ingredients.push({ name, amount: amount || 'Al gusto', type });
+        }
+      });
+
+      const newRecipe = {
+        id: "rec_" + Date.now(),
+        title,
+        meal,
+        time,
+        crunch,
+        tags: tags.length > 0 ? tags : ["#RecetaPropia", "#Crunch"],
+        tip: tip || "Cocinar y servir al momento para mantener la textura crujiente.",
+        calories: parseInt(document.getElementById('calc-calories').innerText) || 280,
+        protein: parseInt(document.getElementById('calc-protein').innerText) || 18,
+        carbs: parseInt(document.getElementById('calc-carbs').innerText) || 12,
+        fat: parseInt(document.getElementById('calc-fat').innerText) || 14,
+        ingredients,
+        steps
+      };
+
+      recipes.unshift(newRecipe);
+      saveToLocalStorage();
+      renderRecipes();
+
+      document.getElementById('recipe-form').reset();
+      updateNutritionCalculation();
+      switchTab('recetas');
+      showToast('¡Receta guardada con éxito!');
+    }
+
+    // EXTRACTOR POR LINK Y MODO ASISTIDO
+    async function fetchRecipeFromUrl() {
+      const urlInput = document.getElementById('import-url');
+      const url = urlInput.value.trim();
+      const btn = document.getElementById('btn-fetch');
+
+      if (!url) {
+        showToast('Por favor escribe un enlace web válido.');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Extrayendo...`;
+      lucide.createIcons();
+
+      try {
+        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+        const res = await fetch(proxyUrl);
+        const data = await res.json();
+        
+        if (!data.contents) throw new Error("Sin respuesta del proxy.");
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(data.contents, 'text/html');
+
+        let recipeData = null;
+        const scripts = doc.querySelectorAll('script[type="application/ld+json"]');
+        for (let s of scripts) {
+          try {
+            const json = JSON.parse(s.innerText);
+            if (json['@type'] === 'Recipe') {
+              recipeData = json;
+              break;
+            } else if (Array.isArray(json['@graph'])) {
+              const found = json['@graph'].find(item => item['@type'] === 'Recipe');
+              if (found) { recipeData = found; break; }
+            }
+          } catch(e) {}
+        }
+
+        if (recipeData) {
+          const title = recipeData.name || "Receta Web Extraída";
+          const ingList = Array.isArray(recipeData.recipeIngredient) ? recipeData.recipeIngredient : [];
+          let stepsText = "";
+          if (Array.isArray(recipeData.recipeInstructions)) {
+            stepsText = recipeData.recipeInstructions.map(st => typeof st === 'string' ? st : st.text).join('\n');
+          } else if (typeof recipeData.recipeInstructions === 'string') {
+            stepsText = recipeData.recipeInstructions;
+          }
+
+          pendingImportedRecipe = {
+            id: "rec_" + Date.now(),
+            title,
+            meal: "Comida",
+            time: "15 min",
+            crunch: "Alto",
+            tags: ["#WebImportada", "#AirFryer"],
+            tip: "Adaptar a freidora de aire y empezar la ingesta por la proteína.",
+            calories: 380,
+            protein: 26,
+            carbs: 18,
+            fat: 20,
+            ingredients: ingList.map(i => ({ name: i, amount: "1 ración", type: "Alimento" })),
+            steps: stepsText || "Preparar en freidora de aire o plancha caliente al momento."
+          };
+          displayPreview(pendingImportedRecipe);
+        } else {
+          const title = doc.querySelector('meta[property="og:title"]')?.content || doc.title || "Receta Web";
+          const desc = doc.querySelector('meta[property="og:description"]')?.content || "";
+          
+          pendingImportedRecipe = {
+            id: "rec_" + Date.now(),
+            title: title.replace(/ - .*/, ''),
+            meal: "Comida",
+            time: "12 min",
+            crunch: "Alto",
+            tags: ["#WebImportada"],
+            tip: "Sustituye aceites refinados por cocción en aire caliente.",
+            calories: 340,
+            protein: 22,
+            carbs: 16,
+            fat: 18,
+            ingredients: [{ name: "Ingredientes del enlace", amount: "Ver pasos", type: "Proteína" }],
+            steps: desc || "Preparar al momento para asegurar firmeza."
+          };
+          displayPreview(pendingImportedRecipe);
+        }
+
+      } catch (err) {
+        showToast('El sitio web tiene bloqueos activos. Usa el modo de texto asistido abajo.');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i data-lucide="download" class="w-4 h-4"></i> Extraer`;
+        lucide.createIcons();
+      }
+    }
+
+    function parsePastedText() {
+      const text = document.getElementById('import-text-pasted').value.trim();
+      if (!text) {
+        showToast('Pega texto de receta primero');
+        return;
+      }
+
+      const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      const title = lines[0].length < 60 ? lines[0] : "Receta Asistida";
+
+      const ingredients = [];
+      const instructions = [];
+      let inInstructions = false;
+
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i];
+        if (line.toLowerCase().includes('preparación') || line.toLowerCase().includes('pasos') || line.toLowerCase().includes('instrucciones')) {
+          inInstructions = true;
+          continue;
+        }
+        if (!inInstructions) {
+          ingredients.push({ name: line, amount: "Al gusto", type: "Alimento" });
+        } else {
+          instructions.push(line);
+        }
+      }
+
+      pendingImportedRecipe = {
+        id: "rec_" + Date.now(),
+        title,
+        meal: "Cena",
+        time: "10 min",
+        crunch: "Alto",
+        tags: ["#Asistida", "#Crunch"],
+        tip: "Preparar directo del congelador a la freidora de aire.",
+        calories: 350,
+        protein: 24,
+        carbs: 15,
+        fat: 19,
+        ingredients: ingredients.length > 0 ? ingredients : [{ name: "Ingredientes del texto", amount: "1 ración", type: "Alimento" }],
+        steps: instructions.join('\n') || text
+      };
+
+      displayPreview(pendingImportedRecipe);
+    }
+
+    function displayPreview(rec) {
+      const preview = document.getElementById('import-preview');
+      const content = document.getElementById('import-preview-content');
+
+      content.innerHTML = `
+        <p class="font-bold text-sm text-forest-900 dark:text-cream-100">${rec.title}</p>
+        <p><strong>Ingredientes:</strong> ${rec.ingredients.length} elementos detectados</p>
+        <p><strong>Resumen pasos:</strong> ${rec.steps.substring(0, 130)}...</p>
+      `;
+      preview.classList.remove('hidden');
+      showToast('Receta interpretada correctamente');
+    }
+
+    function confirmImportedRecipe() {
+      if (!pendingImportedRecipe) return;
+      recipes.unshift(pendingImportedRecipe);
+      saveToLocalStorage();
+      renderRecipes();
+      
+      document.getElementById('import-url').value = '';
+      document.getElementById('import-text-pasted').value = '';
+      document.getElementById('import-preview').classList.add('hidden');
+      pendingImportedRecipe = null;
+      
+      switchTab('recetas');
+      showToast('¡Receta agregada al catálogo de PikyEatr!');
+    }
+
+    // EXPORTAR BACKUP JSON
+    function exportData() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(recipes, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", "PikyEatr_Recetas_Backup.json");
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast('Archivo JSON descargado');
+    }
+
+    // MODO OSCURO
+    function toggleDarkMode() {
+      document.documentElement.classList.toggle('dark');
+      const isDark = document.documentElement.classList.contains('dark');
+      localStorage.setItem('piky_dark_mode', isDark ? 'true' : 'false');
+    }
+
+    // TOAST NOTIFICATIONS
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const text = document.getElementById('toast-text');
+      text.innerText = msg;
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-24', 'opacity-0');
+      }, 3500);
+    }
+
+    window.onload = function() {
+      if (localStorage.getItem('piky_dark_mode') === 'true' || 
+          (!('piky_dark_mode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+      initApp();
+    };
+  </script>
+</body>
+</html>
